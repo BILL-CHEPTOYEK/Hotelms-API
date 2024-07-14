@@ -40,7 +40,7 @@ The configuration for the database connection is located in the `config/db.confi
 
 To start the server, run:
 
-```bash
+bash
 npm start
 
 This will start the server on the port specified in your .env file (default is 5000).
