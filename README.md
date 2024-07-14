@@ -44,8 +44,8 @@ bash
 npm start
 
 This will start the server on the port specified in your .env file (default is 5000).
-API Endpoints
-User Endpoints
+## API Endpoints
+### User Endpoints
 
     Get All Users
 
@@ -61,7 +61,7 @@ User Endpoints
           "data": [ /* Array of user objects */ ]
         }
 
-Room Endpoints
+### Room Endpoints
 
     Get All Rooms
 
@@ -77,7 +77,7 @@ Room Endpoints
           "data": [ /* Array of room objects */ ]
         }
 
-Sample Data Endpoint
+## Sample Data Endpoint
 
     Post Data
 
@@ -102,8 +102,8 @@ json
           "data": "Result - Sample data"
         }
 
-Database Models
-User Model
+## Database Models
+### User Model
 
 The user model is defined in models/userModel.js and includes the following fields:
 
@@ -112,7 +112,7 @@ The user model is defined in models/userModel.js and includes the following fiel
     last_name: Last name of the user (string).
     role: Role of the user, either 'admin' or 'customer' (enum).
 
-Room Model
+### Room Model
 
 The room model is defined in models/roomModel.js and includes the following fields:
 
@@ -122,6 +122,6 @@ The room model is defined in models/roomModel.js and includes the following fiel
     price: Price per night (decimal).
     status: Status of the room (available, occupied, etc.) (string).
 
-License
+### License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
