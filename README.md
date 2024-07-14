@@ -30,15 +30,7 @@ Follow these steps to get the HotelMS API up and running on your local machine:
 
 3. Set up the database:
    - Ensure you have a SQL database running.
-   - Create a `db.config` file in the root directory and add your database configuration:
-
-     ```plaintext
-     HOST: "localhost"
-     PORT: "3306"
-     DB: "hotelms"
-     USER: "your-database-username"
-     PASSWORD: "your-database-password"
-     ```
+   
 
 ## Configuration
 
