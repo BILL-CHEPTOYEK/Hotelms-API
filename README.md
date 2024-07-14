@@ -125,3 +125,14 @@ The room model is defined in models/roomModel.js and includes the following fiel
 ### License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+## Contributors
+## Contributors
+
+- [Iraku Harry](https://github.com/iraqooh)
+- [Atong Abraham Kur](https://github.com/Abram-MrRight)
+- [Akoldou Samuel](https://github.com/Akoldou)
+- [Ngong Abraham Kon](https://github.com/Ngongkon)
+- [Efiti Andrew](https://github.com/1efitiAnndrew)
+- [Geriga Sunday Drago](https://github.com/sundayDrago)
+- [Bill Cheptoyek](https://github.com/BILL-CHEPTOYEK)
