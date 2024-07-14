@@ -124,4 +124,4 @@ The room model is defined in models/roomModel.js and includes the following fiel
 
 License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
