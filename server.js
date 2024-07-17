@@ -28,7 +28,11 @@ db.sequelize.sync({ force: false }).then(() => {
 
 // Import routes
 const hotelRoutes = require("./routes/hotel.routes");
+const roomRoutes = require("./routes/roomRoutes");
+const userRoutes = require("./routes/userRoutes");
 app.use('/api/hotelms', hotelRoutes);
+app.use('/api/hotelms', roomRoutes);
+app.use('/api/hotelms', userRoutes);
 
 // Define port for project
 const PORT = process.env.PORT || 5000;
