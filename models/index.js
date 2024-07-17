@@ -25,5 +25,12 @@ db.sequelize = sequelize;
 
 db.User = require("./userModels.js")(sequelize, Sequelize);
 db.Room = require("./roomModel.js")(sequelize, Sequelize);
+db.Analytics = require('./analyticsModel.js')(sequelize, Sequelize.DataTypes);
+
+db.User.hasMany(db.Room, { foreignKey: 'user_id' });
+db.Room.belongsTo(db.User, { foreignKey: 'user_id' });
+db.Analytics.belongsTo(db.User, { foreignKey: 'user_id' });
+db.Analytics.belongsTo(db.Room, { foreignKey: 'room_id' });
+
 
 module.exports = db;
