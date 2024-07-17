@@ -6,6 +6,6 @@ const hotelController = require('../controllers/hotel.controller');
 router.get('/rooms', hotelController.getAllRooms);
 
 // anaylytical stats
-router.get('/analytics', hotelController.runAllAnalytics);
+router.get('/analytics', hotelController.getAllAnalytics);
 
 module.exports = router;
