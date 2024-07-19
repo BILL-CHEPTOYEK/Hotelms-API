@@ -16,16 +16,8 @@ module.exports = (sequelize, Sequelize) => {
         status: {
             type: Sequelize.ENUM('confirmed', 'canceled', 'completed'),
             defaultValue: 'confirmed'
-        },
-        created_at: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-        },
-        updated_at: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-            onUpdate: Sequelize.literal('CURRENT_TIMESTAMP')
         }
+
     });
 
     return Reservation;
