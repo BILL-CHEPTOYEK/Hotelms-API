@@ -1,6 +1,8 @@
 const db = require("../models");
 const { Room } = require('../models');
 const Notification = db.Notification;
+const Reservation = db.Reservation;
+
 require('dotenv').config();
 const { Op } = require('sequelize');
 
@@ -102,6 +104,200 @@ exports.delete = (req, res) => {
             });
         });
 };
+
+/*
+APIs for the reservation model
+*/
+//Creating a reservation 
+exports.createReservation = async (req, res) => {
+    try {
+        const reservation = await Reservation.create(req.body);
+        res.status(201).json(reservation);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+//Retrieving all the available reservations in the database
+exports.getAllReservations = async (req, res) => {
+    try {
+        const reservations = await Reservation.findAll();
+        res.status(200).json(reservations);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+//How to get a specific reservation by id
+exports.getReservationById = async (req, res) => {
+    try {
+        const reservation = await Reservation.findByPk(req.params.id);
+        if (reservation) {
+            res.status(200).json(reservation);
+        } else {
+            res.status(404).json({ error: 'Reservation not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+//Editing the data for a reservation
+exports.updateReservation = async (req, res) => {
+    try {
+        const [updated] = await Reservation.update(req.body, {
+            where: { reservation_id: req.params.id }
+        });
+        if (updated) {
+            const updatedReservation = await Reservation.findByPk(req.params.id);
+            res.status(200).json(updatedReservation);
+        } else {
+            res.status(404).json({ error: 'Reservation not found' });
+        }
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+// Deleting an  existing reservation
+exports.deleteReservation = async (req, res) => {
+    try {
+        const deleted = await Reservation.destroy({
+            where: { reservation_id: req.params.id }
+        });
+        if (deleted) {
+            res.status(204).send();
+        } else {
+            res.status(404).json({ error: 'Reservation not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+//Checking for an availablle reservation
+exports.checkRoomAvailability = async (req, res) => {
+    const { check_in_date, check_out_date } = req.query;
+    try {
+        const availableRooms = await db.sequelize.query(`
+            SELECT *
+            FROM Rooms
+            WHERE room_id NOT IN (
+                SELECT room_id
+                FROM Reservations
+                WHERE (check_in_date BETWEEN :check_in_date AND :check_out_date)
+                OR (check_out_date BETWEEN :check_in_date AND :check_out_date)
+                OR (:check_in_date BETWEEN check_in_date AND check_out_date)
+                OR (:check_out_date BETWEEN check_in_date AND check_out_date)
+            )
+        `, {
+            replacements: { check_in_date, check_out_date },
+            type: db.sequelize.QueryTypes.SELECT
+        });
+        res.status(200).json({ available_rooms: availableRooms });
+    } catch (error) {
+        res.status(400).json({ error: 'Invalid date range' });
+    }
+};
+
+
+
+
+/*
+APIs for the reservation model
+*/
+//Creating a reservation 
+exports.createReservation = async (req, res) => {
+    try {
+        const reservation = await Reservation.create(req.body);
+        res.status(201).json(reservation);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+//Retrieving all the available reservations in the database
+exports.getAllReservations = async (req, res) => {
+    try {
+        const reservations = await Reservation.findAll();
+        res.status(200).json(reservations);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+//How to get a specific reservation by id
+exports.getReservationById = async (req, res) => {
+    try {
+        const reservation = await Reservation.findByPk(req.params.id);
+        if (reservation) {
+            res.status(200).json(reservation);
+        } else {
+            res.status(404).json({ error: 'Reservation not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+//Editing the data for a reservation
+exports.updateReservation = async (req, res) => {
+    try {
+        const [updated] = await Reservation.update(req.body, {
+            where: { reservation_id: req.params.id }
+        });
+        if (updated) {
+            const updatedReservation = await Reservation.findByPk(req.params.id);
+            res.status(200).json(updatedReservation);
+        } else {
+            res.status(404).json({ error: 'Reservation not found' });
+        }
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+// Deleting an  existing reservation
+exports.deleteReservation = async (req, res) => {
+    try {
+        const deleted = await Reservation.destroy({
+            where: { reservation_id: req.params.id }
+        });
+        if (deleted) {
+            res.status(204).send();
+        } else {
+            res.status(404).json({ error: 'Reservation not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+//Checking for an availablle reservation
+exports.checkRoomAvailability = async (req, res) => {
+    const { check_in_date, check_out_date } = req.query;
+    try {
+        const availableRooms = await db.sequelize.query(`
+            SELECT *
+            FROM Rooms
+            WHERE room_id NOT IN (
+                SELECT room_id
+                FROM Reservations
+                WHERE (check_in_date BETWEEN :check_in_date AND :check_out_date)
+                OR (check_out_date BETWEEN :check_in_date AND :check_out_date)
+                OR (:check_in_date BETWEEN check_in_date AND check_out_date)
+                OR (:check_out_date BETWEEN check_in_date AND check_out_date)
+            )
+        `, {
+            replacements: { check_in_date, check_out_date },
+            type: db.sequelize.QueryTypes.SELECT
+        });
+        res.status(200).json({ available_rooms: availableRooms });
+    } catch (error) {
+        res.status(400).json({ error: 'Invalid date range' });
+    }
+};
+
+
+
 
 exports.runAllAnalytics = async () => {
     try {
