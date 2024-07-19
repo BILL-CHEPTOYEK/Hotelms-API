@@ -17,7 +17,8 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.ENUM('confirmed', 'canceled', 'completed'),
             defaultValue: 'confirmed'
         }
-
+    }, {
+        timestamps: true
     });
 
     return Reservation;

@@ -25,4 +25,7 @@ router.put('/reservations/:id', hotelController.updateReservation);   //Done and
 router.delete('/reservations/:id', hotelController.deleteReservation); //Done and working
 router.get('/roomsavailability', hotelController.checkRoomAvailability); //Pending
 
+// anaylytical stats
+router.get('/analytics', hotelController.getAllAnalytics);
+
 module.exports = router;
