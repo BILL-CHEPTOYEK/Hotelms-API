@@ -36,7 +36,7 @@ const cron = require('node-cron');
 const { runAllAnalytics } = require('./controllers/hotel.controller');
 
 // Schedule task to run at 11:59 PM every day
-cron.schedule('43 13 * * *', async () => {
+cron.schedule('55 05 14 * * *', async () => {
     try {
         console.log('Running analytics update task...');
         await runAllAnalytics();

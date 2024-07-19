@@ -16,30 +16,9 @@ module.exports = (sequelize, Sequelize) => {
         status: {
             type: Sequelize.ENUM('confirmed', 'canceled', 'completed'),
             defaultValue: 'confirmed'
-        },
-        created_at: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-        },
-        updated_at: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-            onUpdate: Sequelize.literal('CURRENT_TIMESTAMP')
         }
-    });
-
-    // Define associations
-    Reservation.belongsTo(sequelize.models.Room, {
-        foreignKey: {
-            name: 'room_id',
-            allowNull: false
-        }
-    });
-    Reservation.belongsTo(sequelize.models.User, {
-        foreignKey: {
-            name: 'user_id',
-            allowNull: false
-        }
+    }, {
+        timestamps: true
     });
 
     return Reservation;

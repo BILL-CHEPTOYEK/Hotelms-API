@@ -27,6 +27,7 @@ db.User = require("./user.model.js")(sequelize, Sequelize);
 db.Room = require("./room.model.js")(sequelize, Sequelize);
 db.Reservation = require("./reservation.model.js")(sequelize, Sequelize);
 db.Notification = require("./notification.model.js")(sequelize, Sequelize);
+db.Analytics = require('./analyticsModel.js')(sequelize, Sequelize.DataTypes);
 
 
 // Define associations
@@ -37,12 +38,8 @@ db.Reservation.belongsTo(db.Room, { foreignKey: 'room_id' });
 
 db.User.hasMany(db.Notification, { foreignKey: 'user_id' });
 db.Notification.belongsTo(db.User, { foreignKey: 'user_id' });
-db.Analytics = require('./analyticsModel.js')(sequelize, Sequelize.DataTypes);
 
 db.User.hasMany(db.Room, { foreignKey: 'user_id' });
 db.Room.belongsTo(db.User, { foreignKey: 'user_id' });
-db.Analytics.belongsTo(db.User, { foreignKey: 'user_id' });
-db.Analytics.belongsTo(db.Room, { foreignKey: 'room_id' });
-
 
 module.exports = db;

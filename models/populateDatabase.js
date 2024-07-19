@@ -2,6 +2,8 @@ const db = require('./index');
 const Chance = require('chance');
 
 module.exports = async () => {
+    const chance = new Chance();
+    const currentDate = new Date();
     try {
         // Create Users
         const users = await db.User.bulkCreate([
@@ -52,7 +54,6 @@ module.exports = async () => {
         ]);
 
         try {
-            const chance = new Chance();
             const analyticsData = [];
             for (let i = 0; i < 20; i++) {
                 const metricType = chance.pickone([
@@ -64,19 +65,14 @@ module.exports = async () => {
     
                 const metricValue = chance.integer({ min: 100, max: 10000 });
                 const metricDate = chance.date({ year: 2023 });
-                const userId = chance.integer({ min: 1, max: users.length });
-                const roomId = chance.integer({ min: 1, max: rooms.length });
     
                 analyticsData.push({
                     metric_type: metricType,
-                    metric_value: metricValue,
-                    metric_date: metricDate,
-                    user_id: userId,
-                    room_id: roomId,
+                    metric_value: metricValue
                 });
             }
     
-            const createdAnalytics = await db.Analytics.bulkCreate(analyticsData);
+            await db.Analytics.bulkCreate(analyticsData);
     
             console.log('Analytics table populated with mock data successfully.');
         } catch (error) {
@@ -85,11 +81,22 @@ module.exports = async () => {
     
 
         // // Create Reservations
-        // const reservations = await Reservation.bulkCreate([
-        //     { user_id: users[0].user_id, room_id: rooms[0].room_id, check_in_date: '2024-07-20', check_out_date: '2024-07-25', status: 'confirmed' },
-        //     { user_id: users[1].user_id, room_id: rooms[1].room_id, check_in_date: '2024-08-01', check_out_date: '2024-08-05', status: 'confirmed' },
-        //     // Add more reservations as needed
-        // ]);
+        const reservations = [];
+        for (let i = 0; i < 20; i++) {
+        for (let j = 0; j < 2; j++) {
+            const checkInDate = chance.date({ year: 2024, month: currentDate.getMonth() });
+            const checkOutDate = new Date(checkInDate);
+            checkOutDate.setDate(checkOutDate.getDate() + 2 + Math.floor(Math.random() * 5));
+            reservations.push({
+                user_id: users[i].user_id,
+                room_id: rooms[i].room_id,
+                check_in_date: checkInDate,
+                check_out_date: checkOutDate,
+                status: i % 7 == 0 ? 'canceled' : i % 5 == 0 ? 'completed' : 'confirmed'
+            });
+        }
+        }
+        await db.Reservation.bulkCreate(reservations);
 
         // // Create Payments
         // const payments = await Payment.bulkCreate([
@@ -97,12 +104,30 @@ module.exports = async () => {
         //     { reservation_id: reservations[1].reservation_id, amount: 600 },
         // ]);
 
-        // // Create Notifications
-        // const notifications = await Notification.bulkCreate([
-        //     { user_id: users[0].user_id, message: 'Your reservation is confirmed.', read_status: false },
-        //     { user_id: users[1].user_id, message: 'New payment received.', read_status: false },
-        // ]);
-
+        // Create Notifications
+        await db.Notification.bulkCreate([
+            { user_id: users[0].user_id, message: 'Your reservation is confirmed.', read_status: 'unread' },
+            { user_id: users[1].user_id, message: 'New payment received.', read_status: 'unread' },
+            { user_id: users[2].user_id, message: 'Room upgrade available.', read_status: 'unread' },
+            { user_id: users[3].user_id, message: 'Check-in time changed.', read_status: 'unread' },
+            { user_id: users[4].user_id, message: 'New message from hotel staff.', read_status: 'unread' },
+            { user_id: users[5].user_id, message: 'Your reservation is canceled.', read_status: 'unread' },
+            { user_id: users[6].user_id, message: 'Payment reminder.', read_status: 'unread' },
+            { user_id: users[7].user_id, message: 'Room assignment changed.', read_status: 'unread' },
+            { user_id: users[8].user_id, message: 'Special offer available.', read_status: 'unread' },
+            { user_id: users[9].user_id, message: 'Check-out time changed.', read_status: 'unread' },
+            { user_id: users[10].user_id, message: 'New review from other guests.', read_status: 'unread' },
+            { user_id: users[11].user_id, message: 'Hotel policy update.', read_status: 'unread' },
+            { user_id: users[12].user_id, message: 'Room service menu updated.', read_status: 'unread' },
+            { user_id: users[13].user_id, message: 'Fitness center hours changed.', read_status: 'unread' },
+            { user_id: users[14].user_id, message: 'Spa appointment available.', read_status: 'unread' },
+            { user_id: users[15].user_id, message: 'Breakfast buffet hours changed.', read_status: 'unread' },
+            { user_id: users[16].user_id, message: 'Hotel event schedule updated.', read_status: 'unread' },
+            { user_id: users[17].user_id, message: 'Parking information updated.', read_status: 'unread' },
+            { user_id: users[18].user_id, message: 'Wi-Fi network changed.', read_status: 'unread' },
+            { user_id: users[19].user_id, message: 'Hotel contact information updated.', read_status: 'unread' },
+            ]);
+            
         console.log('Database populated with mock data successfully.');
     } catch (error) {
         console.error('Error populating database:', error);
