@@ -28,14 +28,13 @@ db.Room = require("./room.model.js")(sequelize, Sequelize);
 db.Reservation = require("./reservation.model.js")(sequelize, Sequelize);
 db.Notification = require("./notification.model.js")(sequelize, Sequelize);
 
-
 // Define associations
-db.User.hasMany(db.Reservation, { foreignKey: 'user_id' });
-db.Room.hasMany(db.Reservation, { foreignKey: 'room_id' });
-db.Reservation.belongsTo(db.User, { foreignKey: 'user_id' });
-db.Reservation.belongsTo(db.Room, { foreignKey: 'room_id' });
+db.User.hasMany(db.Reservation, { foreignKey: { name: 'user_id', allowNull: false } });
+db.Room.hasMany(db.Reservation, { foreignKey: { name: 'room_id', allowNull: false } });
+db.Reservation.belongsTo(db.User, { foreignKey: { name: 'user_id', allowNull: false } });
+db.Reservation.belongsTo(db.Room, { foreignKey: { name: 'room_id', allowNull: false } });
 
-db.User.hasMany(db.Notification, { foreignKey: 'user_id' });
-db.Notification.belongsTo(db.User, { foreignKey: 'user_id' });
+db.User.hasMany(db.Notification, { foreignKey: { name: 'user_id', allowNull: false } });
+db.Notification.belongsTo(db.User, { foreignKey: { name: 'user_id', allowNull: false } });
 
 module.exports = db;

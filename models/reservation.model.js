@@ -28,19 +28,5 @@ module.exports = (sequelize, Sequelize) => {
         }
     });
 
-    // Define associations
-    Reservation.belongsTo(sequelize.models.Room, {
-        foreignKey: {
-            name: 'room_id',
-            allowNull: false
-        }
-    });
-    Reservation.belongsTo(sequelize.models.User, {
-        foreignKey: {
-            name: 'user_id',
-            allowNull: false
-        }
-    });
-
     return Reservation;
 };
