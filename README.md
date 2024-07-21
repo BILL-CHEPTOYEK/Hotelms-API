@@ -30,15 +30,7 @@ Follow these steps to get the HotelMS API up and running on your local machine:
 
 3. Set up the database:
    - Ensure you have a SQL database running.
-   - Create a `db.config` file in the root directory and add your database configuration:
-
-     ```plaintext
-     HOST: "localhost"
-     PORT: "3306"
-     DB: "hotelms"
-     USER: "your-database-username"
-     PASSWORD: "your-database-password"
-     ```
+   
 
 ## Configuration
 
@@ -48,12 +40,12 @@ The configuration for the database connection is located in the `config/db.confi
 
 To start the server, run:
 
-```bash
+bash
 npm start
 
 This will start the server on the port specified in your .env file (default is 5000).
-API Endpoints
-User Endpoints
+## API Endpoints
+### User Endpoints
 
     Get All Users
 
@@ -69,7 +61,7 @@ User Endpoints
           "data": [ /* Array of user objects */ ]
         }
 
-Room Endpoints
+### Room Endpoints
 
     Get All Rooms
 
@@ -85,7 +77,7 @@ Room Endpoints
           "data": [ /* Array of room objects */ ]
         }
 
-Sample Data Endpoint
+## Sample Data Endpoint
 
     Post Data
 
@@ -110,8 +102,8 @@ json
           "data": "Result - Sample data"
         }
 
-Database Models
-User Model
+## Database Models
+### User Model
 
 The user model is defined in models/userModel.js and includes the following fields:
 
@@ -120,7 +112,7 @@ The user model is defined in models/userModel.js and includes the following fiel
     last_name: Last name of the user (string).
     role: Role of the user, either 'admin' or 'customer' (enum).
 
-Room Model
+### Room Model
 
 The room model is defined in models/roomModel.js and includes the following fields:
 
@@ -130,6 +122,16 @@ The room model is defined in models/roomModel.js and includes the following fiel
     price: Price per night (decimal).
     status: Status of the room (available, occupied, etc.) (string).
 
-License
+### License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+## Contributors
+
+- [Bill Cheptoyek](https://github.com/BILL-CHEPTOYEK)
+- [Iraku Harry](https://github.com/iraqooh)
+- [Atong Abraham Kur](https://github.com/Abram-MrRight)
+- [Akoldou Samuel](https://github.com/Akoldou)
+- [Ngong Abraham Kon](https://github.com/Ngongkon)
+- [Efiti Andrew](https://github.com/1efitiAnndrew)
+- [Geriga Sunday Drago](https://github.com/sundayDrago)

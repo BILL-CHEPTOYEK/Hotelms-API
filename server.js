@@ -21,10 +21,31 @@ app.use(express.json());
 // Parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+const populateDatabase = require('./models/populateDatabase');
+
 // Synchronize the database
-db.sequelize.sync({ force: false }).then(() => {
+db.sequelize.sync({ force: false }).then(async () => {
     console.log("DB synchronized");
+    if (process.env.POPULATE_DATA === 'true') {
+        await populateDatabase();
+    }
+    
 });
+
+const cron = require('node-cron');
+const { runAllAnalytics } = require('./controllers/hotel.controller');
+
+// Schedule task to run at 11:59 PM every day
+cron.schedule('55 05 14 * * *', async () => {
+    try {
+        console.log('Running analytics update task...');
+        await runAllAnalytics();
+        console.log('Analytics update task completed.');
+    } catch (error) {
+        console.error('Error running analytics update task:', error);
+    }
+});
+
 
 // Import routes
 const hotelRoutes = require("./routes/hotel.routes");
