@@ -16,6 +16,22 @@ module.exports = (sequelize, Sequelize) => {
         status: {
             type: Sequelize.ENUM('confirmed', 'canceled', 'completed'),
             defaultValue: 'confirmed'
+        },
+        user_id: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Users', // Model name is case sensitive
+                key: 'user_id'
+            }
+        },
+        room_id: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Rooms', // Model name is case sensitive
+                key: 'room_id'
+            }
         }
     }, {
         timestamps: true

@@ -1,31 +1,32 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const hotelController = require('../controllers/hotel.controller');
+const hotelController = require("../controllers/hotel.controller");
 
-// Routes
-router.get('/rooms', hotelController.getAllRooms);
+// Room routes
+router.get("/rooms", hotelController.getAllRooms);
 
-  //http://localhost:5000/api/hotelms/createNotification
- // Create a new Notification
- router.post("/createNotification", hotelController.create);
+// User routes
+router.get("/users", hotelController.getAllUsers);
+router.post("/users", hotelController.addUser);
+router.get("/users/:id", hotelController.getUserById);
+router.put("/users/:id", hotelController.updateUser);
+router.delete("/users/:id", hotelController.deleteUser);
 
- // Retrieve all Notifications
- router.get("/getAllNotification", hotelController.findAll);
+// Notification routes
+router.post("/notifications", hotelController.create);
+router.get("/notifications", hotelController.findAllNotifications);
+router.put("/notifications/:notification_id", hotelController.updateNotification);
+router.delete("/notifications/:notification_id", hotelController.deleteNotification);
 
- // Update a Notification with id
- router.put("/updateNotification/:notification_id", hotelController.update);
+// Reservation routes
+router.post("/reservations", hotelController.createReservation);
+router.get("/reservations", hotelController.getAllReservations);
+router.get("/reservations/:id", hotelController.getReservationById);
+router.put("/reservations/:id", hotelController.updateReservation);
+router.delete("/reservations/:id", hotelController.deleteReservation);
+router.get("/availability", hotelController.checkRoomAvailability);
 
- // Delete a Notification with id
- router.delete("/deleteNotification/:notification_id", hotelController.delete);
-
-router.post('/addreservations', hotelController.createReservation); //Done and working
-router.get('/reservations', hotelController.getAllReservations);     //Done and working
-router.get('/reservations/:id', hotelController.getReservationById); //Done and working
-router.put('/reservations/:id', hotelController.updateReservation);   //Done and working
-router.delete('/reservations/:id', hotelController.deleteReservation); //Done and working
-router.get('/roomsavailability', hotelController.checkRoomAvailability); //Pending
-
-// anaylytical stats
-router.get('/analytics', hotelController.getAllAnalytics);
+// Analytics routes
+router.get("/analytics", hotelController.getAnalytics);
 
 module.exports = router;

@@ -1,11 +1,9 @@
 const db = require("../models");
-const { Room } = require('../models');
-const Notification = db.Notification;
-const Reservation = db.Reservation;
-
-require('dotenv').config();
+const { Room, User, Notification, Reservation } = db;
 const { Op } = require('sequelize');
+require('dotenv').config();
 
+// Room functions
 exports.getAllRooms = async (req, res) => {
     try {
         const rooms = await Room.findAll();
@@ -15,10 +13,71 @@ exports.getAllRooms = async (req, res) => {
     }
 };
 
-//notification functions
+// User functions
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.findAll();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
-// Create a new notification
-exports.create = (req, res) => {
+exports.addUser = async (req, res) => {
+    try {
+        const user = await User.create(req.body);
+        res.status(201).json(user);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+exports.getUserById = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.params.id);
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.updateUser = async (req, res) => {
+    try {
+        const [updated] = await User.update(req.body, {
+            where: { id: req.params.id }
+        });
+        if (updated) {
+            const updatedUser = await User.findByPk(req.params.id);
+            res.status(200).json(updatedUser);
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+exports.deleteUser = async (req, res) => {
+    try {
+        const deleted = await User.destroy({
+            where: { id: req.params.id }
+        });
+        if (deleted) {
+            res.status(204).send();
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Notification functions
+exports.create = async (req, res) => {
     if (!req.body.user_id || !req.body.message) {
         return res.status(400).send({
             message: "Content cannot be empty!"
@@ -31,84 +90,76 @@ exports.create = (req, res) => {
         read_status: req.body.read_status || 'unread'
     };
 
-    Notification.create(notification)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the Notification."
-            });
+    try {
+        const data = await Notification.create(notification);
+        res.send(data);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Some error occurred while creating the Notification."
         });
+    }
 };
 
-// Retrieve all notifications
-exports.findAll = (req, res) => {
-    Notification.findAll()
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving notifications."
-            });
+exports.findAllNotifications = async (req, res) => {
+    try {
+        const data = await Notification.findAll();
+        res.send(data);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving notifications."
         });
+    }
 };
 
-// Update a notification by id
-exports.update = (req, res) => {
+exports.updateNotification = async (req, res) => {
     const id = req.params.notification_id;
 
-    Notification.update(req.body, {
-        where: { notification_id: id }
-    })
-        .then(num => {
-            if (num == 1) {
-                res.send({
-                    message: "Notification was updated successfully."
-                });
-            } else {
-                res.send({
-                    message: `Cannot update Notification with id=${id}. Maybe Notification was not found or req.body is empty!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error updating Notification with id=" + id
-            });
+    try {
+        const num = await Notification.update(req.body, {
+            where: { notification_id: id }
         });
+
+        if (num == 1) {
+            res.send({
+                message: "Notification was updated successfully."
+            });
+        } else {
+            res.send({
+                message: `Cannot update Notification with id=${id}. Maybe Notification was not found or req.body is empty!`
+            });
+        }
+    } catch (err) {
+        res.status(500).send({
+            message: "Error updating Notification with id=" + id
+        });
+    }
 };
 
-// Delete a notification by id
-exports.delete = (req, res) => {
+exports.deleteNotification = async (req, res) => {
     const id = req.params.notification_id;
 
-    Notification.destroy({
-        where: { notification_id: id }
-    })
-        .then(num => {
-            if (num == 1) {
-                res.send({
-                    message: "Notification was deleted successfully!"
-                });
-            } else {
-                res.send({
-                    message: `Cannot delete Notification with id=${id}. Maybe Notification was not found!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Could not delete Notification with id=" + id
-            });
+    try {
+        const num = await Notification.destroy({
+            where: { notification_id: id }
         });
+
+        if (num == 1) {
+            res.send({
+                message: "Notification was deleted successfully!"
+            });
+        } else {
+            res.send({
+                message: `Cannot delete Notification with id=${id}. Maybe Notification was not found!`
+            });
+        }
+    } catch (err) {
+        res.status(500).send({
+            message: "Could not delete Notification with id=" + id
+        });
+    }
 };
 
-/*
-APIs for the reservation model
-*/
-//Creating a reservation 
+// Reservation functions
 exports.createReservation = async (req, res) => {
     try {
         const reservation = await Reservation.create(req.body);
@@ -118,7 +169,6 @@ exports.createReservation = async (req, res) => {
     }
 };
 
-//Retrieving all the available reservations in the database
 exports.getAllReservations = async (req, res) => {
     try {
         const reservations = await Reservation.findAll();
@@ -128,7 +178,6 @@ exports.getAllReservations = async (req, res) => {
     }
 };
 
-//How to get a specific reservation by id
 exports.getReservationById = async (req, res) => {
     try {
         const reservation = await Reservation.findByPk(req.params.id);
@@ -142,7 +191,6 @@ exports.getReservationById = async (req, res) => {
     }
 };
 
-//Editing the data for a reservation
 exports.updateReservation = async (req, res) => {
     try {
         const [updated] = await Reservation.update(req.body, {
@@ -158,7 +206,7 @@ exports.updateReservation = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
-// Deleting an  existing reservation
+
 exports.deleteReservation = async (req, res) => {
     try {
         const deleted = await Reservation.destroy({
@@ -174,7 +222,6 @@ exports.deleteReservation = async (req, res) => {
     }
 };
 
-//Checking for an availablle reservation
 exports.checkRoomAvailability = async (req, res) => {
     const { check_in_date, check_out_date } = req.query;
     try {
@@ -199,6 +246,7 @@ exports.checkRoomAvailability = async (req, res) => {
     }
 };
 
+// Analytics functions
 exports.runAllAnalytics = async () => {
     try {
         const currentDate = new Date();
@@ -206,8 +254,8 @@ exports.runAllAnalytics = async () => {
         // number of guests
         const number_of_guests = await db.Reservation.count({
             where: {
-                check_in_date: { [Op.lte] : currentDate },
-                check_out_date: { [Op.lte] : new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1) },
+                check_in_date: { [Op.lte]: currentDate },
+                check_out_date: { [Op.lte]: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1) },
                 status: 'confirmed'
             }
         });
@@ -232,161 +280,52 @@ exports.runAllAnalytics = async () => {
             }
         });
 
-        // Calculate occupancy rate (rooms occupied / total rooms)
-        const totalRooms = await db.Room.count();
-        const occupancyRate = number_of_guests / totalRooms;
-
-        // average_daily_rate (average rental income per paid occupied room per day)
-        // const averageDailyRateResult = await db.Reservation.findAll({
-        //     attributes: [
-        //         [db.Sequelize.literal('AVG("Payments"."amount" / DATEDIFF("check_out_date", "check_in_date"))'), 'average_daily_rate']
-        //     ],
-        //     include: [
-        //         {
-        //             model: Payment,
-        //             required: true,
-        //             where: {
-        //                 createdAt: {
-        //                     [Op.gte]: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()),
-        //                     [Op.lt]: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)
-        //                 }
-        //             }
-        //         }
-        //     ]
-        // });
-
-        // const averageDailyRate = averageDailyRateResult[0].dataValues.average_daily_rate || 0;
-
-        // revenue_per_available_room
-        // const revenuePerAvailableRoomResult = await db.Analytics.findOne({
-        //     where: {
-        //         metric_type: 'occupancy_rate',
-        //         metric_date: currentDate
-        //     }
-        // });
-
-        // const occupancyRateByRoom = revenuePerAvailableRoomResult ? revenuePerAvailableRoomResult.metric_value : 0;
-        // const revenuePerAvailableRoom = occupancyRateByRoom * averageDailyRate;
-
-        // average_length_of_stay
-        const averageLengthOfStayResult = await db.Reservation.findAll({
-            attributes: [
-                [db.Sequelize.fn('AVG', db.Sequelize.fn('DATEDIFF', db.Sequelize.col('check_out_date'), db.Sequelize.col('check_in_date'))), 'average_length_of_stay']
-            ],
-            where: {
-                status: 'completed'
-            }
+        // Find most reserved room type
+        const mostReservedRoomType = await db.Reservation.findOne({
+            attributes: ['room_id', [db.Sequelize.fn('COUNT', db.Sequelize.col('room_id')), 'count']],
+            group: ['room_id'],
+            order: [[db.Sequelize.literal('count'), 'DESC']]
         });
 
-        const averageLengthOfStay = parseFloat(averageLengthOfStayResult[0].dataValues.average_length_of_stay) || 0;
-
-        // booking_lead_time
-        const bookingLeadTimeResult = await db.Reservation.findAll({
-            attributes: [
-                [db.Sequelize.fn('AVG', db.Sequelize.fn('DATEDIFF', db.Sequelize.col('check_in_date'), db.Sequelize.col('createdAt'))), 'booking_lead_time']
-            ],
-            where: {
-                createdAt: {
-                    [Op.gte]: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()),
-                    [Op.lt]: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)
-                }
-            }
+        // Get last 5 days occupancy rate
+        const occupancyRates = await db.sequelize.query(`
+            SELECT
+                DATE_TRUNC('day', check_in_date) AS day,
+                COUNT(*) AS occupancy_rate
+            FROM Reservations
+            WHERE
+                check_in_date >= :startDate AND
+                check_in_date < :endDate
+            GROUP BY day
+            ORDER BY day
+        `, {
+            replacements: {
+                startDate: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 5),
+                endDate: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)
+            },
+            type: db.sequelize.QueryTypes.SELECT
         });
 
-        const bookingLeadTime = parseFloat(bookingLeadTimeResult[0].dataValues.booking_lead_time) || 0;
+        const analyticsData = {
+            number_of_guests,
+            // total_revenue: totalRevenueResult || 0,
+            number_of_reservations: numberOfReservations || 0,
+            most_reserved_room_type: mostReservedRoomType ? mostReservedRoomType.room_id : null,
+            occupancy_rates: occupancyRates || []
+        };
 
-        // cancellation_rate
-        const totalReservations = await db.Reservation.count({
-            where: {
-                createdAt: {
-                    [Op.gte]: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()),
-                    [Op.lt]: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)
-                }
-            }
-        });
-
-        const cancelledReservations = await db.Reservation.count({
-            where: {
-                updatedAt: {
-                    [Op.gte]: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()),
-                    [Op.lt]: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)
-                },
-                status: 'canceled'
-            }
-        });
-
-        const cancellationRate = cancelledReservations / totalReservations || 0;
-
-        await db.Analytics.bulkCreate([
-            {
-                metric_type: 'number_of_guests',
-                metric_value: number_of_guests,
-                metric_date: currentDate
-            },
-            {
-                metric_type: 'number_of_reservations',
-                metric_value: numberOfReservations,
-                metric_date: currentDate
-            },
-            {
-                metric_type: 'occupancy_rate',
-                metric_value: occupancyRate || 0,
-                metric_date: currentDate
-            },
-            // {
-            //     metric_type: 'total_revenue',
-            //     metric_value: totalRevenueResult || 0,
-            //     metric_date: currentDate
-            // },
-            // {
-            //     metric_type: 'average_daily_rate',
-            //     metric_value: averageDailyRate || 0,
-            //     metric_date: currentDate
-            // },
-            // {
-            //     metric_type: 'revenue_per_available_room',
-            //     metric_value: revenuePerAvailableRoom || 0,
-            //     metric_date: currentDate
-            // },
-            {
-                metric_type: 'average_length_of_stay',
-                metric_value: averageLengthOfStay || 0,
-                metric_date: currentDate
-            },
-            {
-                metric_type: 'booking_lead_time',
-                metric_value: bookingLeadTime || 0,
-                metric_date: currentDate
-            },
-            {
-                metric_type: 'cancellation_rate',
-                metric_value: cancellationRate || 0,
-                metric_date: currentDate
-            },
-        ])
-        // .then(data => {
-        //     res.status(200).json(data)
-        // }).catch(err => {
-        //     res.status(500).json(err)
-        // })
-
-        console.log('Analytics updated successfully for the current day.');
+        return analyticsData;
     } catch (error) {
-        console.error('Error updating analytics:', error);
-        throw error; // Optional: Rethrow the error for handling in the caller function
+        console.error('Error running analytics:', error);
+        throw error;
     }
 };
 
-exports.getAllAnalytics = async (req, res) => {
+exports.getAnalytics = async (req, res) => {
     try {
-
-        const data = await db.Analytics.findAll();
-
-        res.status(200).json({
-            data: data
-        });
+        const analyticsData = await exports.runAllAnalytics();
+        res.status(200).json(analyticsData);
     } catch (error) {
-        console.error('Error retrieving analytics:', error);
-        res.status(500).json({ error: 'Failed to retrieve analytics data' });
+        res.status(500).json({ message: error.message });
     }
 };
