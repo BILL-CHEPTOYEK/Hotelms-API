@@ -95,7 +95,7 @@ module.exports = async () => {
                 status: i % 7 == 0 ? 'canceled' : i % 5 == 0 ? 'completed' : 'confirmed'
             });
         }
-        }
+        } 
         await db.Reservation.bulkCreate(reservations);
 
         // // Create Payments
