@@ -3,14 +3,21 @@ const router = express.Router();
 const hotelController = require("../controllers/hotel.controller");
 
 // Room routes
-router.get("/rooms", hotelController.getAllRooms);
+router.get("/fetchRooms", hotelController.getAllRooms);
+// Route to get a room by ID
+router.get('/getRoom/:room_id', hotelController.getRoomById);
+//Add Room
+router.post('/add', hotelController.addRoom);
+//Edit room
+router.put('/updateRoom/:room_id', hotelController.updateRoom);
+router.delete('/deleteRoom/:room_id', hotelController.deleteRoom);
 
 // User routes
 router.get("/users", hotelController.getAllUsers);
-router.post("/users", hotelController.addUser);
+router.post("/addUser", hotelController.addUser);
 router.get("/users/:id", hotelController.getUserById);
 router.put("/users/:id", hotelController.updateUser);
-router.delete("/users/:id", hotelController.deleteUser);
+router.delete("/deleteUsers/:id", hotelController.deleteUser);
 
 // Notification routes
 router.post("/notifications", hotelController.create);
@@ -19,13 +26,18 @@ router.put("/notifications/:notification_id", hotelController.updateNotification
 router.delete("/notifications/:notification_id", hotelController.deleteNotification);
 
 // Reservation routes
-router.post("/reservations", hotelController.createReservation);
-router.get("/reservations", hotelController.getAllReservations);
-router.get("/reservations/:id", hotelController.getReservationById);
-router.put("/reservations/:id", hotelController.updateReservation);
-router.delete("/reservations/:id", hotelController.deleteReservation);
-router.get("/availability", hotelController.checkRoomAvailability);
+router.post("/creareReservations", hotelController.createReservation);
+router.get("/getReservations", hotelController.getAllReservations);
+router.get("/getReservations/:id", hotelController.getReservationById);
+router.put("/updateReservations/:id", hotelController.updateReservation);
+router.delete("/deleteReservations/:id", hotelController.deleteReservation);
+router.get("/checkAvailability", hotelController.checkRoomAvailability);
 
+// Register Admin Route
+router.post('/register', hotelController.registerAdmin);
+
+// Login Admin Route
+router.post('/login', hotelController.loginAdmin);
 // Analytics routes
 router.get("/analytics", hotelController.getAnalytics);
 
