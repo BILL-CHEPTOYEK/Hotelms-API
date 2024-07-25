@@ -11,7 +11,14 @@ router.post('/add', hotelController.addRoom);
 //Edit room
 router.put('/updateRoom/:room_id', hotelController.updateRoom);
 router.delete('/deleteRoom/:room_id', hotelController.deleteRoom);
+router.post("/rooms", hotelController.createRoom);
+router.get("/rooms", hotelController.getAllRooms);
+router.get("/rooms/:id", hotelController.getRoomById);
+router.put("/rooms/:id", hotelController.updateRoom);
+router.delete("/rooms/:id", hotelController.deleteRoom);
 
+
+router.get("/availability", hotelController.checkRoomAvailability);
 // User routes
 router.get("/users", hotelController.getAllUsers);
 router.post("/addUser", hotelController.addUser);
@@ -42,3 +49,6 @@ router.post('/login', hotelController.loginAdmin);
 router.get("/analytics", hotelController.getAnalytics);
 
 module.exports = router;
+
+
+//http://localhost:5000/api/hotelms/
