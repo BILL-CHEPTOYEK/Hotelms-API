@@ -6,6 +6,7 @@ require('dotenv').config();
 // Import models
 const db = require("./models");
 
+
 // Initialize express app
 const app = express();
 
@@ -29,7 +30,7 @@ db.sequelize.sync({ force: false }).then(async () => {
     if (process.env.POPULATE_DATA === 'true') {
         await populateDatabase();
     }
-    
+
 });
 
 const cron = require('node-cron');
